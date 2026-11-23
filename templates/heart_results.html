@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, star %}
+{% block title %}Heart results{% endblock %}
+{% block content %}
+<p class="eyebrow">Part B · Exploration and evaluation</p>
+<h1 class="display">Heart disease<br><span>results</span></h1>
+<p class="lede">{{ r.records }} records, {{ r.features }} input features, 80/20 stratified split (400 train, 100 test). Both models scored close to random, so the dataset carries little usable signal.</p>
+
+<section class="card">
+  <h2 class="serif">Test-set performance (100 records)</h2>
+  <div class="table-wrap">
+  <table class="tbl">
+    <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>CV ROC-AUC</th><th>Shuffled labels</th></tr></thead>
+    <tbody>
+    {% for m in r.models %}
+      <tr><td><b>{{ m.name }}</b></td><td>{{ "%.3f"|format(m.accuracy) }}</td><td>{{ "%.3f"|format(m.precision) }}</td><td>{{ "%.3f"|format(m.recall) }}</td><td>{{ "%.3f"|format(m.f1) }}</td><td>{{ "%.3f"|format(m.auc) }}</td><td>{{ "%.3f"|format(m.cv_auc) }}</td><td>{{ "%.3f"|format(m.shuffled) }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="muted small">When real labels score about the same as shuffled labels, the model is not learning a pattern that generalises.</p>
+</section>
+
+<h2 class="section-title">Exploring the data</h2>
+<section class="figs">
+  <figure class="card fig"><img src="/figures/fig06.png" alt="Target distribution" loading="lazy"><figcaption><b>Figure 6.</b> Target distribution: 266 with heart disease, 234 without. Fairly balanced.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig05.png" alt="Dataset summary and class balance" loading="lazy"><figcaption><b>Figure 5.</b> Dataset summary: no missing values and no duplicate rows.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig07.png" alt="Numeric feature distributions" loading="lazy"><figcaption><b>Figure 7.</b> Numeric feature distributions.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig08.png" alt="Categorical features compared with heart disease" loading="lazy"><figcaption><b>Figure 8.</b> Categorical features compared with the target. The groups overlap.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig09.png" alt="Correlation matrix" loading="lazy"><figcaption><b>Figure 9.</b> Correlations with the target are all close to zero.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig10.png" alt="Statistical tests of each feature" loading="lazy"><figcaption><b>Figure 10.</b> Statistical tests. Only smoking is borderline (p = 0.048).</figcaption></figure>
+</section>
+
+<h2 class="section-title">Evaluating the models</h2>
+<section class="figs">
+  <figure class="card fig wide"><img src="/figures/fig12.png" alt="Confusion matrices for both models" loading="lazy"><figcaption><b>Figure 12.</b> Confusion matrices for Logistic Regression and Random Forest.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig13.png" alt="ROC curves for both models" loading="lazy"><figcaption><b>Figure 13.</b> ROC curves stay close to the random-guess diagonal.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig11.png" alt="Model results table from the notebook" loading="lazy"><figcaption><b>Figure 11.</b> Results table from the notebook.</figcaption></figure>
+  <figure class="card fig wide"><img src="/figures/fig14.png" alt="Cross-validated ROC-AUC versus shuffled labels" loading="lazy"><figcaption><b>Figure 14.</b> Cross-validated ROC-AUC compared with shuffled-label results.</figcaption></figure>
+</section>
+{% endblock %}

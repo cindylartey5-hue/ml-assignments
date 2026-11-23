@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, star %}
+{% block title %}Iris results{% endblock %}
+{% block content %}
+<p class="eyebrow">Part A · Evaluation on the test set</p>
+<h1 class="display">Iris<br><span>results</span></h1>
+<p class="lede">30 test flowers, 10 of each species. The model classified {{ r.correct }} correctly; all three errors were between versicolor and virginica.</p>
+
+<section class="stats">
+  <div class="card stat"><div class="ring"><b>{{ (r.accuracy*100)|round|int }}%</b><small>Acc.</small></div>
+    <div><p class="eyebrow">Accuracy</p><p class="num">{{ r.correct }} / {{ r.test_size }}</p><p class="muted">test flowers correct</p></div></div>
+  <div class="card stat"><div><p class="eyebrow">Macro precision</p><p class="num">{{ "%.2f"|format(r.macro.precision) }}</p></div></div>
+  <div class="card stat"><div><p class="eyebrow">Macro recall</p><p class="num">{{ "%.2f"|format(r.macro.recall) }}</p></div></div>
+  <div class="card stat"><div><p class="eyebrow">5-fold CV mean</p><p class="num">{{ (r.cv_mean*100)|round|int }}%</p><p class="muted">std {{ "%.3f"|format(r.cv_std) }}</p></div></div>
+</section>
+
+<section class="card">
+  <h2 class="serif">Per-species scores</h2>
+  <div class="table-wrap">
+  <table class="tbl">
+    <thead><tr><th>Species</th><th>Precision</th><th>Recall</th><th>F1-score</th></tr></thead>
+    <tbody>
+    {% for c in r.per_class %}
+      <tr><td><b>{{ c.name }}</b></td><td>{{ "%.2f"|format(c.precision) }}</td><td>{{ "%.2f"|format(c.recall) }}</td><td>{{ "%.2f"|format(c.f1) }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="figs">
+  <figure class="card fig wide"><img src="/figures/fig01.png" alt="Pair plot of the Iris features coloured by species" loading="lazy">
+    <figcaption><b>Figure 1.</b> Pair plot of the Iris features coloured by species. Setosa is clearly separated; versicolor and virginica overlap.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig03.png" alt="Iris confusion matrix on the test set" loading="lazy">
+    <figcaption><b>Figure 3.</b> Confusion matrix. The diagonal shows 10 + 9 + 8 = 27 correct predictions.</figcaption></figure>
+  <figure class="card fig"><img src="/figures/fig04.png" alt="Iris feature importance" loading="lazy">
+    <figcaption><b>Figure 4.</b> Feature importance. Petal length and petal width contribute most; sepal width the least.</figcaption></figure>
+  <figure class="card fig wide"><img src="/figures/fig02.png" alt="Iris classification report" loading="lazy">
+    <figcaption><b>Figure 2.</b> Accuracy, precision, recall, F1-score and the classification report from the notebook.</figcaption></figure>
+</section>
+{% endblock %}

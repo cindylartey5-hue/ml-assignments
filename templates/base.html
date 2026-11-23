@@ -1,0 +1,50 @@
+{% from "_ui.html" import icon, star %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Overview{% endblock %} · ML Classifier Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800;125,900&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="/">{{ star() }} ML CLASSIFIER LAB</a>
+    <p class="side-group">Part A · Iris</p>
+    {% for key, label, ico, short in nav if key.startswith("iris") %}
+    <a class="side-link {% if active == key %}on{% endif %}" href="{{ url_for(key) }}">{{ icon(ico) }}{{ label }}</a>
+    {% endfor %}
+    <p class="side-group">Part B · Heart disease</p>
+    {% for key, label, ico, short in nav if key.startswith("heart") %}
+    <a class="side-link {% if active == key %}on{% endif %}" href="{{ url_for(key) }}">{{ icon(ico) }}{{ label }}</a>
+    {% endfor %}
+    <p class="side-group">Project</p>
+    <a class="side-link {% if active == 'home' %}on{% endif %}" href="/">{{ icon("home") }}Overview</a>
+    <a class="side-link" href="{{ student.repo }}" target="_blank" rel="noopener">{{ icon("github") }}GitHub repo</a>
+    <div class="student-card">
+      <p class="eyebrow">Student</p>
+      <strong>{{ student.name }}</strong>
+      <span>{{ student.id }} · {{ student.course }}</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    {% block content %}{% endblock %}
+    <footer class="foot">
+      <span>© 2026 {{ student.name }} · {{ student.id }} · Assignment 1</span>
+      <span>Built with Flask and scikit-learn</span>
+    </footer>
+  </main>
+</div>
+
+<nav class="tabbar" aria-label="Main">
+  {% for key, label, ico, short in nav %}
+  <a class="{% if active == key %}on{% endif %}" href="{{ url_for(key) }}">{{ icon(ico) }}<span>{{ short }}</span></a>
+  {% endfor %}
+</nav>
+</body>
+</html>

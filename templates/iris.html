@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, star %}
+{% block title %}Iris predictor{% endblock %}
+{% block content %}
+<p class="eyebrow">Part A · Iris predictor</p>
+<h1 class="display">Name that<br><span>iris</span></h1>
+<p class="lede">Enter the four measurements of a flower in centimetres. The Random Forest returns the most likely species and how the 200 trees shared their vote.</p>
+
+<section class="grid-2 top">
+  <form class="card form" method="post" novalidate>
+    <h2 class="serif">Measurements</h2>
+    <p class="muted small">Allowed range is the range seen in the training data.</p>
+    <div class="fields">
+      {% for key, label, low, high in fields %}
+      <label class="field {% if errors[key] %}bad{% endif %}">
+        <span>{{ label }} <em>cm</em></span>
+        <input type="number" name="{{ key }}" step="0.1" min="{{ low }}" max="{{ high }}" inputmode="decimal"
+               value="{{ '%g'|format(values.get(key)) if values.get(key) is not none else '' }}" placeholder="{{ low }} – {{ high }}" required>
+        {% if errors[key] %}<small>{{ errors[key] }}</small>{% endif %}
+      </label>
+      {% endfor %}
+    </div>
+    <button class="btn wide" type="submit">{{ star() }} Predict species {{ icon("arrow") }}</button>
+  </form>
+
+  <div class="card result">
+    {% if result %}
+      <p class="eyebrow">Prediction</p>
+      <div class="result-head">
+        <div class="ring big"><b>{{ result.confidence }}%</b><small>Sure</small></div>
+        <div>
+          <h2 class="species">Iris {{ result.species|lower }}</h2>
+          <p class="muted">{% if result.confidence >= 90 %}The trees agree strongly.{% elif result.confidence >= 60 %}Most trees agree.{% else %}The trees are split: this flower sits where species overlap.{% endif %}</p>
+        </div>
+      </div>
+      <div class="bars">
+        {% for name, pct in result.all %}
+        <div class="bar-row">
+          <div class="bar-label"><span>{{ name }}</span><b>{{ pct }}%</b></div>
+          <div class="bar"><i style="width: {{ pct }}%"></i></div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">
+        <div class="badge sky big">{{ icon("flower") }}</div>
+        <h2 class="serif">No prediction yet</h2>
+        <p class="muted">Fill in the four measurements and press <b>Predict species</b>. Petal length and petal width carry most of the decision.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

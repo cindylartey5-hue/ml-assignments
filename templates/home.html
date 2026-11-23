@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_ui.html" import icon, star %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<p class="eyebrow">{{ student.course }} · Assignment 1 · Supervised classification</p>
+<h1 class="display">Two datasets<br><span>two models</span></h1>
+<p class="lede">An Iris species classifier (Part A) and a heart disease classifier (Part B), trained with scikit-learn and served from the saved models.</p>
+<div class="actions">
+  <a class="btn" href="{{ url_for('iris') }}">{{ star() }} Classify an iris {{ icon("arrow") }}</a>
+  <a class="btn ghost" href="{{ url_for('heart') }}">Try the heart model</a>
+</div>
+
+<section class="stats">
+  <div class="card stat">
+    <div class="ring"><b>{{ (iris.accuracy * 100)|round|int }}%</b><small>Iris</small></div>
+    <div><p class="eyebrow">Iris test accuracy</p><p class="num">{{ iris.correct }} of {{ iris.test_size }}</p><p class="muted">flowers classified correctly</p></div>
+  </div>
+  <div class="card stat">
+    <div class="badge sky">{{ icon("chart") }}</div>
+    <div><p class="eyebrow">5-fold cross-validation</p><p class="num">{{ (iris.cv_mean * 100)|round|int }}%</p><p class="muted">mean accuracy · std {{ "%.3f"|format(iris.cv_std) }}</p></div>
+  </div>
+  <div class="card stat">
+    <div class="badge peach">{{ icon("heart") }}</div>
+    <div><p class="eyebrow">Heart disease records</p><p class="num">{{ heart.records }}</p><p class="muted">{{ heart.positive }} disease · {{ heart.negative }} no disease</p></div>
+  </div>
+  <div class="card stat">
+    <div class="badge gold">{{ icon("alert") }}</div>
+    <div><p class="eyebrow">Heart model ROC-AUC</p><p class="num">≈ 0.51</p><p class="muted">close to random · educational only</p></div>
+  </div>
+</section>
+
+<section class="grid-2">
+  <a class="card part" href="{{ url_for('iris') }}">
+    <p class="eyebrow">Part A · Multiclass</p>
+    <h2 class="serif">Iris species</h2>
+    <p class="muted">150 flowers, 4 measurements, 3 species. A Random Forest with 200 trees predicts setosa, versicolor or virginica from sepal and petal sizes.</p>
+    <span class="link">Open predictor {{ icon("arrow") }}</span>
+  </a>
+  <a class="card part" href="{{ url_for('heart') }}">
+    <p class="eyebrow">Part B · Binary · OneHotEncoder</p>
+    <h2 class="serif">Heart disease</h2>
+    <p class="muted">500 records, 6 numeric and 4 categorical features. Logistic Regression and Random Forest were compared; the better ROC-AUC model is used here.</p>
+    <span class="link">Open predictor {{ icon("arrow") }}</span>
+  </a>
+</section>
+
+<section class="card steps">
+  <h2 class="serif">How the models were built</h2>
+  <ol class="step-list">
+    <li><b>Training</b><span>The model learns patterns from labelled examples (80% of the data).</span></li>
+    <li><b>Testing</b><span>It is checked on the 20% it never saw, using a stratified split.</span></li>
+    <li><b>Prediction</b><span>The saved model estimates the class of new examples entered on this site.</span></li>
+  </ol>
+</section>
+{% endblock %}
